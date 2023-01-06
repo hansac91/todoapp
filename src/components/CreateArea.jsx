@@ -1,27 +1,28 @@
 import React from "react";
 import { useState } from "react";
-import Props from "react";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
+import Zoom from "@material-ui/core/Zoom";
+
 
 function CreateArea(props) {
+
+    const [isExpanded, setExpanded] = useState(false);
 
     const [note, setNote] = useState({
         title: "",
         content: ""
     });
 
-    function handleChange(event) {
-        console.log(event.target)
-            const { name, value } = event.target;
+function handleChange(event) {
+    const { name, value } = event.target;
 
-            setNote(prevNote => {
-                return {
-                    ...prevNote,
-                    [name]: value
-                };
-
-            });
+    setNote(prevNote => {
+        return {
+            ...prevNote,
+            [name]: value
+            };
+        });
     }
 
     function submitNote(event) {
@@ -33,30 +34,38 @@ function CreateArea(props) {
         event.preventDefault();
     }
 
+    function expand() {
+        setExpanded(true);
+    }
+
     return (
         <div>
            <form className="create-note">
+            {isExpanded && (
                 <input 
-                type="text" 
                 name="title" 
                 onChange={handleChange}
                 value={note.title}
                 placeholder="Title"
                 />
-                <textarea 
+            )}
+    
+            <textarea 
                 name="content" 
-                rows="3"
+                rows={isExpanded ? 3 : 1 }
+                onClick={expand}
                 onChange={handleChange}
-                value={note.title}
+                value={note.content}
                 placeholder="Take a note"
-                />
+            />
+            <Zoom in={isExpanded}>
                 <Fab onClick={submitNote}>
                     <AddIcon />
-
                 </Fab>
+            </Zoom>
            </form>
         </div>
-    )
+    );
 }
 
 export default CreateArea;
